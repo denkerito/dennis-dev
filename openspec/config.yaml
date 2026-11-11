@@ -13,7 +13,6 @@ context: |
   navigation, visible focus, alt text, semantic HTML.
   Every page needs a title, meta description and Open Graph tags; target
   Lighthouse >= 90 in Performance, Accessibility, Best Practices and SEO.
-  Light and dark themes are both supported everywhere (respect the OS setting).
   Keep dependencies minimal; justify every new runtime dependency.
 
 # Per-artifact rules
@@ -23,12 +22,12 @@ rules:
     - State which pages or capabilities are affected
   specs:
     - Every requirement has at least one Given/When/Then scenario
-    - Include scenarios for mobile viewport, keyboard navigation and dark mode when the change touches UI
+    - Include scenarios for mobile viewport and keyboard navigation when the change touches UI
   design:
     - Explain any new dependency and the alternative that was rejected
     - Note the impact on performance and accessibility
   tasks:
-    - End every change with a verification task (build, lint, type check, responsive, a11y, dark mode)
+    - End every change with a verification task (build, lint, type check, responsive, a11y)
 
 # Per-operation guidance
 operations:
