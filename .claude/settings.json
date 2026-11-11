@@ -1,0 +1,22 @@
+{
+  "enabledPlugins": {
+    "superpowers@superpowers-marketplace": false
+  },
+  "skillOverrides": {
+    "brainstorming": "off",
+    "diagnosing-superpowers": "off",
+    "dispatching-parallel-agents": "off",
+    "executing-plans": "off",
+    "finishing-a-development-branch": "off",
+    "receiving-code-review": "off",
+    "requesting-code-review": "off",
+    "subagent-driven-development": "off",
+    "systematic-debugging": "off",
+    "test-driven-development": "off",
+    "using-git-worktrees": "off",
+    "using-superpowers": "off",
+    "verification-before-completion": "off",
+    "writing-plans": "off",
+    "writing-skills": "off"
+  }
+}
