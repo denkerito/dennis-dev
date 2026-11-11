@@ -1,32 +1,41 @@
 schema: spec-driven
 
-# Project context (optional)
-# Add only constraints that should guide OpenSpec artifacts and workflows.
-# Include constraints an agent cannot infer by reading the code.
-# Keep general project documentation and discoverable codebase facts out.
-# Example:
-#   context: |
-#     Designs and tasks must cover Windows, macOS, and Linux
-#     Write all artifacts in Spanish
+# Project context: constraints an agent cannot infer by reading the code.
+context: |
+  Personal portfolio website for Dennis (single developer, no team).
+  Stack: Next.js (App Router) + TypeScript in strict mode. Prefer static
+  rendering (SSG); use server features only when a change explicitly needs them.
+  Hosting is not decided yet: do not depend on any provider-specific feature.
+  All site content and all OpenSpec artifacts are written in English.
+  Design is desktop-first: the desktop layout is the reference. Every page
+  must still be fully responsive and work well on mobile (from 360px wide).
+  Accessibility target is WCAG 2.2 AA: color contrast, full keyboard
+  navigation, visible focus, alt text, semantic HTML.
+  Every page needs a title, meta description and Open Graph tags; target
+  Lighthouse >= 90 in Performance, Accessibility, Best Practices and SEO.
+  Light and dark themes are both supported everywhere (respect the OS setting).
+  Keep dependencies minimal; justify every new runtime dependency.
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always state what is out of scope
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+# Per-artifact rules
+rules:
+  proposal:
+    - Always include an explicit "Out of scope" section
+    - State which pages or capabilities are affected
+  specs:
+    - Every requirement has at least one Given/When/Then scenario
+    - Include scenarios for mobile viewport, keyboard navigation and dark mode when the change touches UI
+  design:
+    - Explain any new dependency and the alternative that was rejected
+    - Note the impact on performance and accessibility
+  tasks:
+    - End every change with a verification task (build, lint, type check, responsive, a11y, dark mode)
 
-# Per-operation guidance (optional)
-# Add advisory guidance for how apply and archive work should be conducted.
-# This is separate from artifact rules above.
-# Example:
-#   operations:
-#     apply:
-#       guidance:
-#         - Keep test summaries concise
-#     archive:
-#       guidance:
-#         - Summarize the archive outcome before finishing
+# Per-operation guidance
+operations:
+  apply:
+    guidance:
+      - Run the build, lint and type check before marking the last task done
+      - Keep test and verification summaries concise
+  archive:
+    guidance:
+      - Summarize which main specs were created or updated before finishing
