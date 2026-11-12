@@ -1,0 +1,11 @@
+.section {
+  /* Placeholder height until real content exists, so anchors can be tested. */
+  min-height: 70svh;
+  padding: 4rem var(--gutter);
+}
+
+.title {
+  font-size: clamp(1.75rem, 1.25rem + 2vw, 3rem);
+  font-weight: 700;
+  line-height: 1.1;
+}

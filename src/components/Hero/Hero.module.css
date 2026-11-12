@@ -1,0 +1,25 @@
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Header plus hero fill the first screen. */
+  min-height: calc(100svh - var(--header-height));
+  padding-inline: var(--gutter);
+}
+
+.wordmark {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 400;
+  /* Driven by the viewport width, capped by its height. */
+  font-size: clamp(3rem, 31vw, 62svh);
+  line-height: 0.9;
+  color: var(--color-ink);
+  white-space: nowrap;
+}
+
+.mascotMount {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
