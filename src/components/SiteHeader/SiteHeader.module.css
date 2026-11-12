@@ -1,0 +1,56 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: var(--header-height);
+  padding-inline: var(--gutter);
+  background-color: var(--color-paper);
+}
+
+.homeMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  font-family: var(--font-display), sans-serif;
+  font-size: 2rem;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.nav {
+  /* Pull the last link's padding back to the gutter line. */
+  margin-inline-end: -0.5rem;
+}
+
+.list {
+  display: flex;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding-inline: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.3em;
+}
+
+/* The accent appears only as decoration: the text itself stays ink. */
+.link:hover,
+.link:focus-visible {
+  text-decoration-line: underline;
+  text-decoration-color: var(--color-accent);
+}
