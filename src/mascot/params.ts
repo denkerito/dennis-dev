@@ -82,21 +82,37 @@ export const POSES: readonly { value: CatPose; label: string }[] = [
 
 /** What the cat is doing and where it faces, as opposed to how it is built. */
 export type CatView = {
-  pose: CatPose;
   /** Degrees. 0 faces the viewer, 90 faces the viewer's right, 180 faces away, 270 faces left. */
   heading: number;
   /** Degrees, -90 to 90. Positive turns the head toward the cat's own left. */
   headTurn: number;
-  /** Position in the walk cycle, 0 to 1. Ignored unless the pose is "walking". */
+  /** 0 is on its feet, 1 is seated; values between are the cat sitting down or getting up. */
+  sit: number;
+  /** How much the legs are stepping: 0 stands still, 1 lifts the paws fully. */
+  step: number;
+  /** How far each step travels: 0 steps in place (turning on the spot), 1 is the full walk. */
+  stride: number;
+  /** Position in the walk cycle, 0 to 1. Has no effect while `step` is 0. */
   phase: number;
+  /** 1 is open, 0 is closed. Defaults to 1. */
+  eyeOpen?: number;
+  /** -1 to 1: a sideways sweep of the tail. Defaults to 0. */
+  tailFlick?: number;
   /** Draw joints, bones and paw contacts over the cat. A tuning aid. */
   showSkeleton?: boolean;
 };
 
+/** The three poses the lab offers, as amounts of sitting, stepping and stride. */
+export const POSE_VIEW: Record<CatPose, Pick<CatView, "sit" | "step" | "stride">> = {
+  standing: { sit: 0, step: 0, stride: 0 },
+  walking: { sit: 0, step: 1, stride: 1 },
+  seated: { sit: 1, step: 0, stride: 0 },
+};
+
 export const DEFAULT_VIEW: CatView = {
-  pose: "standing",
   heading: 35,
   headTurn: 0,
+  ...POSE_VIEW.standing,
   phase: 0,
   showSkeleton: false,
 };
@@ -107,10 +123,6 @@ export type CatPaint = {
   body: string;
   /** Eyes and whiskers. */
   detail: string;
-  /** If set, a rim of this colour is drawn around the silhouette. */
-  rim?: string;
-  /** Width of the rim in CSS pixels. Defaults to 3. */
-  rimWidth?: number;
   /** Colour of the skeleton overlay. Defaults to `detail`. */
   overlay?: string;
   /** Colour of the eyes. Defaults to `detail`. */
@@ -121,12 +133,5 @@ export type CatPaint = {
   earInner?: string;
 };
 
-/**
- * The cat's dark tone. Experimental and used only by the lab: it is not a theme
- * token, because the theme allows three colour roles. The change that puts the
- * cat on the home page decides whether it becomes one.
- */
-export const MASCOT_TONE = "#0b0b10";
-
-/** Duration of one full walk cycle, in seconds. */
-export const WALK_CYCLE_SECONDS = 1.1;
+/** Duration of one full walk cycle, in seconds: a kitten's quick steps. */
+export const WALK_CYCLE_SECONDS = 0.36;

@@ -1,4 +1,4 @@
-/* All text is ink on paper (13.72:1). The accent appears only as a wordmark sample. */
+/* All text is ink on paper (13.72:1). The wordmark colour appears only as a backdrop sample. */
 
 .lab {
   max-width: 80rem;
@@ -56,11 +56,7 @@
   font-size: 30cqi;
   line-height: 0.9;
   white-space: nowrap;
-  color: var(--color-ink);
-}
-
-.wordmarkAccent {
-  color: var(--color-accent);
+  color: var(--color-wordmark);
 }
 
 .canvas {

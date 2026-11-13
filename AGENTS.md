@@ -54,6 +54,10 @@ In the reference, the cat is small and seen from above in the hero and footer. I
 - **Decided:** exactly how the cat interacts with the wordmark is deferred. Do not design it as part of other work. The two items above already constrain it.
 - **Provisional (proposed, not confirmed by Dennis):** idle gestures (blink, tail flick) stop a while after the last interaction, so that nothing moves on its own for more than five seconds (WCAG 2.2.2).
 - **Provisional (proposed, not confirmed by Dennis):** the cat's interest does not fade: it follows every time.
+- **Provisional:** in the hero the cat waits in front of the end of the wordmark, at about 78% of the hero's width and 72% of its height.
+- **Provisional:** when the pointer leaves the hero the cat stops where it is and sits down. It does not go back to its waiting spot.
+- **Provisional:** it walks at about one of its own body lengths a second, which crosses the hero in about five seconds. It is on its feet half a second after the pointer moves away, and sits again within a second of arriving. Dennis looked at this walk in the lab and accepted it on 2026-11-13.
+- **Provisional:** its size follows the wordmark: 0.45 of the wordmark's font size, between 80 and 220 CSS pixels.
 - **Open:** what a click does.
 
 ### Look
@@ -72,9 +76,9 @@ In the reference, the cat is small and seen from above in the hero and footer. I
 - **Open:** how strong the effect is here, and whether it persists or heals. Dennis first described it as "slightly distorts the wordmark", then showed the reference where it is destroyed. Build any prototype with these as adjustable parameters so he can choose by looking.
 - **Provisional:** a liquid look like the reference most likely needs WebGL, which can be written without a library.
 
-### Known problem to resolve
+### How the cat stays visible on the wordmark
 
-- **Open:** the wordmark is currently navy and the cat near-black. Those two colours have almost no contrast, so the cat nearly disappears exactly where it matters most. Options discussed: a light outline around the cat (which could read as a fur rim), a cat in the accent colour, or a wordmark in the accent colour. Dennis has not chosen. The cat lab page shows the options side by side so he can choose by looking.
+- **Decided:** a near-black cat almost disappeared on the navy wordmark (1.2:1). Asked how to tell them apart, Dennis answered: change the page's colours; the cat must not get a light rim or colours other than those already decided. So the cat keeps its colours and the wordmark gets a colour of its own, an ink blue that is a lighter tint of the navy, on which the cat stands out at 4.1:1. A light rim, a cat in the accent colour and a wordmark in the accent colour were considered and rejected.
 
 ### Rules that hold whatever the cat becomes
 
@@ -91,10 +95,13 @@ In the reference, the cat is small and seen from above in the hero and footer. I
   | Role | Share | Value | Used for |
   |---|---|---|---|
   | Background | 60% | cream `#F4EDE0` | page background |
-  | Second colour | 30% | navy `#14213D` | text, the giant wordmark, filled cards |
+  | Second colour | 30% | navy `#14213D` | text, filled cards |
+  | Wordmark colour | part of the 30% | ink blue `#3F6FD0` | the giant wordmark only |
   | Accent | 10% | dark coral `#E24A38` | small details only |
+  | Mascot colour | the cat | near-black `#0B0B10` | the cat's silhouette and pupils only |
 
-- **Provisional:** the giant wordmark uses the second colour, so that the accent really stays near 10%.
+- **Provisional:** the giant wordmark uses the wordmark colour, a lighter tint of the second colour with the same hue, so that the accent really stays near 10%. The header's `D` home mark stays in the second colour: it is a link, and the wordmark colour does not reach the contrast normal-size text needs (4.1:1 on cream).
+- The cat's eyes, whiskers and inner ears use the background colour.
 - The accent does not reach the contrast needed for normal-size text on either other colour (3.4:1 on cream, 4.0:1 on navy). Use it for decoration and large elements, not for body-size text.
 - **Provisional:** the wordmark is set in a very heavy, condensed sans-serif in capitals; Anton is the stand-in. The reference adds rough, stamp-like edges on top of the letters; whether to do that here is **Open**.
 - Mood taken from the reference, all **Provisional**: ink on paper, oversized type that runs off the edges of the screen behind the content, solid dark cards sitting on the light background.

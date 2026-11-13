@@ -15,12 +15,13 @@ import { drawCat } from "@/mascot/draw";
 import {
   DEFAULT_PARAMS,
   DEFAULT_VIEW,
-  MASCOT_TONE,
   PARAM_CONTROLS,
+  POSE_VIEW,
   POSES,
   WALK_CYCLE_SECONDS,
   type CatPaint,
   type CatParams,
+  type CatPose,
   type CatView,
   type ParamControl,
 } from "@/mascot/params";
@@ -30,13 +31,6 @@ import styles from "./CatLab.module.css";
 const BACKDROPS = [
   { value: "page", label: "Page background" },
   { value: "wordmark", label: "Wordmark" },
-] as const;
-
-const TREATMENTS = [
-  { value: "none", label: "None" },
-  { value: "rim", label: "Light rim" },
-  { value: "accent-cat", label: "Cat in accent colour" },
-  { value: "accent-wordmark", label: "Wordmark in accent colour" },
 ] as const;
 
 const EYE_COLOURS = [
@@ -52,14 +46,13 @@ const EAR_DETAILS = [
 ] as const;
 
 type Backdrop = (typeof BACKDROPS)[number]["value"];
-type Treatment = (typeof TREATMENTS)[number]["value"];
 type EyeColour = (typeof EYE_COLOURS)[number]["value"];
 type EarDetail = (typeof EAR_DETAILS)[number]["value"];
 
 /** Small details of the face. The defaults are the ones Dennis chose: light eyes with pupils, light inner ears. */
 type Details = { eyes: EyeColour; customEye: string; pupils: boolean; ears: EarDetail };
 
-// The custom eye colour is experimental and outside the theme, like MASCOT_TONE.
+// The custom eye colour is experimental and the one colour outside the theme.
 const DEFAULT_DETAILS: Details = {
   eyes: "paper",
   customEye: "#e8c547",
@@ -67,12 +60,20 @@ const DEFAULT_DETAILS: Details = {
   ears: "paper",
 };
 
-/** Everything about the view except the walk phase, which advances every frame and lives in a ref. */
-type ViewSettings = Omit<CatView, "phase">;
+/**
+ * Everything about the view except the pose amounts, which come from the chosen
+ * pose through POSE_VIEW, and the walk phase, which advances every frame and lives in a ref.
+ */
+type ViewSettings = Omit<CatView, "phase" | "sit" | "step" | "stride">;
 
-const { phase: DEFAULT_PHASE, ...DEFAULT_VIEW_SETTINGS } = DEFAULT_VIEW;
+const DEFAULT_PHASE = DEFAULT_VIEW.phase;
+const DEFAULT_VIEW_SETTINGS: ViewSettings = {
+  heading: DEFAULT_VIEW.heading,
+  headTurn: DEFAULT_VIEW.headTurn,
+  showSkeleton: DEFAULT_VIEW.showSkeleton,
+};
+const DEFAULT_POSE: CatPose = "standing";
 const DEFAULT_BACKDROP: Backdrop = "page";
-const DEFAULT_TREATMENT: Treatment = "none";
 
 const TURN_DEGREES_PER_SECOND = 40;
 /** Longest step the animation takes in one frame, so a stalled tab does not make the cat jump. */
@@ -86,9 +87,9 @@ const SIZE_MIN = PARAM_CONTROLS.find((control) => control.key === "size")?.min ?
 
 const UNIT_NAMES: Record<string, string> = { "°": "degrees", px: "pixels" };
 
-type Theme = { paper: string; ink: string; accent: string };
+type Theme = { paper: string; ink: string; accent: string; wordmark: string; mascot: string };
 
-type Scene = { params: CatParams; view: ViewSettings; treatment: Treatment; details: Details };
+type Scene = { params: CatParams; view: ViewSettings; pose: CatPose; details: Details };
 
 function readTheme(): Theme {
   const style = getComputedStyle(document.documentElement);
@@ -97,23 +98,20 @@ function readTheme(): Theme {
     paper: token("--color-paper"),
     ink: token("--color-ink"),
     accent: token("--color-accent"),
+    wordmark: token("--color-wordmark"),
+    mascot: token("--color-mascot"),
   };
 }
 
-function paintFor(treatment: Treatment, theme: Theme, details: Details): CatPaint {
-  const accentCat = treatment === "accent-cat";
-  const body = accentCat ? theme.accent : MASCOT_TONE;
-  // Accent details would vanish on an accent cat, so they turn ink there.
-  const accent = accentCat ? theme.ink : theme.accent;
-  const colourOf = { paper: theme.paper, accent, custom: details.customEye };
+function paintFor(theme: Theme, details: Details): CatPaint {
+  const colourOf = { paper: theme.paper, accent: theme.accent, custom: details.customEye };
   return {
-    body,
+    body: theme.mascot,
     detail: theme.paper,
-    overlay: accent,
+    overlay: theme.accent,
     eye: colourOf[details.eyes],
-    pupil: details.pupils ? body : undefined,
+    pupil: details.pupils ? theme.mascot : undefined,
     earInner: details.ears === "none" ? undefined : colourOf[details.ears],
-    ...(treatment === "rim" ? { rim: theme.paper, rimWidth: 3 } : {}),
   };
 }
 
@@ -148,9 +146,9 @@ export function CatLab() {
 
   const [params, setParams] = useState<CatParams>(DEFAULT_PARAMS);
   const [view, setView] = useState<ViewSettings>(DEFAULT_VIEW_SETTINGS);
+  const [pose, setPose] = useState<CatPose>(DEFAULT_POSE);
   const [turning, setTurning] = useState(false);
   const [backdrop, setBackdrop] = useState<Backdrop>(DEFAULT_BACKDROP);
-  const [treatment, setTreatment] = useState<Treatment>(DEFAULT_TREATMENT);
   const [details, setDetails] = useState<Details>(DEFAULT_DETAILS);
   // null until the viewer uses the motion control; until then the system preference decides.
   const [playChoice, setPlayChoice] = useState<boolean | null>(null);
@@ -175,7 +173,7 @@ export function CatLab() {
   const phaseRef = useRef(DEFAULT_PHASE);
 
   const playing = playChoice ?? !prefersReducedMotion;
-  const walking = view.pose === "walking";
+  const walking = pose === "walking";
   const animating = playing && pageVisible && (walking || turning);
 
   // The cat reaches about `size` to either side of its ground point, so at most
@@ -210,17 +208,17 @@ export function CatLab() {
     drawCat(
       ctx,
       scene.params,
-      { ...scene.view, phase: phaseRef.current },
-      paintFor(scene.treatment, themeRef.current, scene.details),
+      { ...scene.view, ...POSE_VIEW[scene.pose], phase: phaseRef.current },
+      paintFor(themeRef.current, scene.details),
     );
   }, []);
 
   // Layout effect: the canvas height may just have changed, and the new
   // drawing should be on screen in the same frame.
   useLayoutEffect(() => {
-    sceneRef.current = { params: shownParams, view, treatment, details };
+    sceneRef.current = { params: shownParams, view, pose, details };
     draw();
-  }, [shownParams, view, treatment, details, draw]);
+  }, [shownParams, view, pose, details, draw]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -270,9 +268,8 @@ export function CatLab() {
     JSON.stringify(
       {
         params: shownParams,
-        view: { pose: view.pose, heading: wholeDegrees(view.heading), headTurn: view.headTurn },
+        view: { pose, heading: wholeDegrees(view.heading), headTurn: view.headTurn },
         backdrop,
-        treatment,
         details,
       },
       null,
@@ -296,19 +293,14 @@ export function CatLab() {
   const reset = () => {
     setParams(DEFAULT_PARAMS);
     setView(DEFAULT_VIEW_SETTINGS);
+    setPose(DEFAULT_POSE);
     setTurning(false);
     setBackdrop(DEFAULT_BACKDROP);
-    setTreatment(DEFAULT_TREATMENT);
     setDetails(DEFAULT_DETAILS);
     phaseRef.current = DEFAULT_PHASE;
     setFallbackText(null);
     setStatus("Every value is back to its default");
   };
-
-  const wordmarkClass =
-    treatment === "accent-wordmark"
-      ? `${styles.wordmark} ${styles.wordmarkAccent}`
-      : styles.wordmark;
 
   return (
     <div className={styles.lab}>
@@ -321,7 +313,7 @@ export function CatLab() {
         <div className={styles.stage}>
           {backdrop === "wordmark" && (
             <div className={styles.backdrop} aria-hidden="true">
-              <span className={wordmarkClass}>DENNIS</span>
+              <span className={styles.wordmark}>DENNIS</span>
             </div>
           )}
           <canvas
@@ -339,8 +331,8 @@ export function CatLab() {
               legend="Pose"
               name={id("pose")}
               options={POSES}
-              value={view.pose}
-              onChange={(pose) => setView((current) => ({ ...current, pose }))}
+              value={pose}
+              onChange={setPose}
               nested
             />
             <RangeField
@@ -393,14 +385,6 @@ export function CatLab() {
             options={BACKDROPS}
             value={backdrop}
             onChange={setBackdrop}
-          />
-
-          <RadioGroup
-            legend="Contrast treatment"
-            name={id("treatment")}
-            options={TREATMENTS}
-            value={treatment}
-            onChange={setTreatment}
           />
 
           <fieldset className={styles.group}>

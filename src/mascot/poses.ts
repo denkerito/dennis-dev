@@ -1,5 +1,5 @@
 // The still poses: standing and seated. The walk lives in gait.ts and starts
-// from the standing pose.
+// from the standing pose. A rig for any moment is a blend of the two.
 
 import type { CatParams } from "./params";
 import {
@@ -8,10 +8,7 @@ import {
   type LegPose,
   LEGS,
   PAW_HEIGHT,
-  type Rig,
   TAIL_POINTS,
-  assembleRig,
-  blendRigs,
   dimensions,
   isFront,
   legSide,
@@ -69,8 +66,11 @@ export function standingPose(p: CatParams): BodyPose {
   };
 }
 
-/** Upright on the haunches, front legs straight, tail on the ground curled to the right. */
-export function seatedPose(p: CatParams): BodyPose {
+/**
+ * Upright on the haunches, front legs straight, tail on the ground curled to the right.
+ * `tailFlick` (-1 to 1) lifts the end of the tail off the ground and sweeps it.
+ */
+export function seatedPose(p: CatParams, tailFlick = 0): BodyPose {
   const d = dimensions(p);
   const g = d.g;
   const shoulder: V3 = [0.16, 0, d.h + 0.06];
@@ -102,8 +102,14 @@ export function seatedPose(p: CatParams): BodyPose {
   const radius = 0.44 * g;
   const tail: V3[] = [];
   for (let i = 0; i < TAIL_POINTS; i++) {
-    const angle = Math.PI + (i * step) / radius;
-    tail.push([-0.04 + Math.cos(angle) * radius, Math.sin(angle) * radius, p.tailGirth]);
+    const t = i / (TAIL_POINTS - 1);
+    // A flick swings the outer half of the tail along its arc and lifts it.
+    const angle = Math.PI + (i * step) / radius + tailFlick * 0.5 * t * t;
+    tail.push([
+      -0.04 + Math.cos(angle) * radius,
+      Math.sin(angle) * radius,
+      p.tailGirth + Math.abs(tailFlick) * 0.16 * t * t,
+    ]);
   }
 
   return {
@@ -115,17 +121,4 @@ export function seatedPose(p: CatParams): BodyPose {
     tail,
     legs,
   };
-}
-
-export function standingRig(p: CatParams, headTurn = 0): Rig {
-  return assembleRig(p, standingPose(p), headTurn);
-}
-
-export function seatedRig(p: CatParams, headTurn = 0): Rig {
-  return assembleRig(p, seatedPose(p), headTurn);
-}
-
-/** A rig part-way between standing (0) and seated (1). */
-export function sittingDownRig(p: CatParams, amount: number, headTurn = 0): Rig {
-  return blendRigs(standingRig(p, headTurn), seatedRig(p, headTurn), amount);
 }

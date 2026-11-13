@@ -1,9 +1,9 @@
 import { tuftShapes } from "./fur";
-import { cycleDistance, walkingRig } from "./gait";
+import { cycleDistance, movingPose } from "./gait";
 import type { CatPaint, CatParams, CatView } from "./params";
-import { seatedRig, standingRig } from "./poses";
+import { seatedPose } from "./poses";
 import { type Camera, type P2, makeCamera } from "./project";
-import { type Rig, standingHeight } from "./skeleton";
+import { type Rig, assembleRig, blendRigs, standingHeight } from "./skeleton";
 import { type V3, clamp, cross, dot, lerp, mix, mul, normalize, offset, radians, sub } from "./vec";
 
 const TAU = Math.PI * 2;
@@ -11,14 +11,16 @@ const TAU = Math.PI * 2;
 /** The cat's shapes for a view, before projection. */
 export function rigFor(params: CatParams, view: CatView): Rig {
   const headTurn = clamp(view.headTurn, -90, 90);
-  switch (view.pose) {
-    case "walking":
-      return walkingRig(params, view.phase, headTurn);
-    case "seated":
-      return seatedRig(params, headTurn);
-    default:
-      return standingRig(params, headTurn);
-  }
+  const sit = clamp(view.sit, 0, 1);
+  const flick = clamp(view.tailFlick ?? 0, -1, 1);
+  const seated = () => assembleRig(params, seatedPose(params, flick), headTurn);
+  if (sit >= 1) return seated();
+  const step = clamp(view.step, 0, 1);
+  const stride = clamp(view.stride, 0, 1);
+  const moving = assembleRig(params, movingPose(params, view.phase, step, stride, flick), headTurn);
+  if (sit <= 0) return moving;
+  // Eased, so the cat settles into the pose instead of arriving at constant speed.
+  return blendRigs(moving, seated(), sit * sit * (3 - 2 * sit));
 }
 
 // Every sub-path is wound the same way, so that filling them together with the
@@ -84,6 +86,7 @@ function drawEyes(
   ctx: CanvasRenderingContext2D,
   rig: Rig,
   params: CatParams,
+  view: CatView,
   camera: Camera,
   paint: CatPaint,
 ): void {
@@ -91,6 +94,9 @@ function drawEyes(
   const azimuth = radians(40);
   const lift = radians(2);
   const k = params.eyeSize;
+  const open = clamp(view.eyeOpen ?? 1, 0, 1);
+  // Closed eyes are simply not there: the face is one colour.
+  if (open < 0.08) return;
   for (const side of [1, -1]) {
     // Direction from the centre of the head to the eye.
     const n = normalize(
@@ -126,10 +132,10 @@ function drawEyes(
       ctx.fill();
     };
     ctx.fillStyle = paint.eye ?? paint.detail;
-    disc(1, 1);
+    disc(1, open);
     if (paint.pupil) {
       ctx.fillStyle = paint.pupil;
-      disc(0.3, 0.82);
+      disc(0.3, 0.82 * open);
     }
   }
 }
@@ -208,7 +214,7 @@ function drawSkeleton(
   // Marks fixed to the ground. While walking they travel backward at the speed
   // of the ground, so a paw in stance should stay on the same mark.
   const spacing = 0.25;
-  const travelled = view.pose === "walking" ? view.phase * cycleDistance(params) : 0;
+  const travelled = view.phase * cycleDistance(params) * clamp(view.stride, 0, 1);
   const shift = travelled % spacing;
   for (let k = -6; k <= 6; k++) {
     const x = k * spacing - shift;
@@ -251,17 +257,11 @@ export function drawCat(
   const path = silhouette(rig, params, camera);
 
   ctx.save();
-  if (paint.rim) {
-    ctx.strokeStyle = paint.rim;
-    ctx.lineWidth = (paint.rimWidth ?? 3) * 2;
-    ctx.lineJoin = "round";
-    ctx.stroke(path);
-  }
   ctx.fillStyle = paint.body;
   ctx.fill(path, "nonzero");
 
   if (paint.earInner) drawInnerEars(ctx, rig, camera, paint.earInner);
-  drawEyes(ctx, rig, params, camera, paint);
+  drawEyes(ctx, rig, params, view, camera, paint);
   ctx.strokeStyle = paint.detail;
   drawWhiskers(ctx, rig, camera);
 

@@ -14,12 +14,14 @@
   /* Driven by the viewport width, capped by its height. */
   font-size: clamp(3rem, 31vw, 62svh);
   line-height: 0.9;
-  color: var(--color-ink);
+  color: var(--color-wordmark);
   white-space: nowrap;
 }
 
 .mascotMount {
   position: absolute;
   inset: 0;
+  /* The cat's canvas is larger than the cat: its empty edges must not widen the page. */
+  overflow: hidden;
   pointer-events: none;
 }

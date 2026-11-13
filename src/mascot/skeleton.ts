@@ -97,7 +97,7 @@ export function dimensions(p: CatParams) {
   const frontTop = (side: number): V3 => [L / 2 - 0.04, side * 0.16 * g, h - 0.02];
   const hindTop = (side: number): V3 => [-L / 2 + 0.06, side * 0.17 * g, h];
   const frontPaw = (side: number): V3 => [L / 2, side * 0.16 * g, PAW_HEIGHT];
-  const hindPaw = (side: number): V3 => [-L / 2 - 0.02, side * 0.17 * g, PAW_HEIGHT];
+  const hindPaw = (side: number): V3 => [-L / 2 + 0.04, side * 0.17 * g, PAW_HEIGHT];
   /** From a hind paw to its hock. */
   const hockOffset: V3 = [-0.09, 0, 0.4 * h];
   const frontReach = distance(frontTop(1), frontPaw(1));
@@ -114,9 +114,14 @@ export function dimensions(p: CatParams) {
     hockOffset,
     // Slightly longer than the straight distance, so a standing leg is a little
     // bent and a walking leg can reach the ends of its stride.
-    frontBone: frontReach * 0.54,
-    hindBone: hindReach * 0.68,
+    frontBone: frontReach * 0.56,
+    hindBone: hindReach * 0.8,
   };
+}
+
+/** Length of the cat from nose to rump, the unit its behaviour measures distances in. */
+export function bodyLength(p: CatParams): number {
+  return p.bodyLength + 0.6 + p.headSize * 1.3;
 }
 
 /** Height of the standing cat from the ground to the ear tips. */

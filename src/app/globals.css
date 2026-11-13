@@ -4,8 +4,10 @@
  */
 :root {
   --color-paper: #f4ede0; /* background */
-  --color-ink: #14213d; /* second colour: text, wordmark, filled surfaces */
+  --color-ink: #14213d; /* second colour: text, filled surfaces */
+  --color-wordmark: #3f6fd0; /* a lighter tint of the second colour: the wordmark only */
   --color-accent: #e24a38; /* accent: decoration and large elements only */
+  --color-mascot: #0b0b10; /* the cat's silhouette and pupils only */
 
   --font-text: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
     Arial, sans-serif;

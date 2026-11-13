@@ -47,23 +47,24 @@ The cat lab SHALL let the viewer choose the pose and the heading, turn the head,
 - **WHEN** continuous turning is switched on
 - **THEN** the cat's heading turns steadily through a full circle until it is switched off
 
-### Requirement: Backdrops and contrast treatments
-The cat lab SHALL show the cat on the page background alone or over a sample of the wordmark set in the display typeface, and SHALL offer these treatments for telling the cat apart from the wordmark: none, a light rim around the cat, the cat in the accent colour, and the wordmark in the accent colour. Background, wordmark and accent colours SHALL be the site's theme colours.
+### Requirement: Backdrops
+The cat lab SHALL show the cat on the page background alone or over a sample of the wordmark set in the display typeface and in the site's wordmark colour. The cat SHALL be drawn in the site's mascot colour, with no rim and no alternative colouring. Every colour SHALL come from the site's theme.
 
-#### Scenario: The contrast problem is visible
-- **GIVEN** the cat lab shows the cat over the wordmark sample
-- **WHEN** the treatment is "none"
-- **THEN** the cat is drawn in its dark colour directly over the wordmark in the site's second colour
-
-#### Scenario: Switching treatment
-- **GIVEN** the cat lab shows the cat over the wordmark sample
-- **WHEN** the light rim treatment is chosen
-- **THEN** a rim in the page background colour follows the cat's outline, including its fur
+#### Scenario: Cat over the wordmark
+- **GIVEN** the cat lab is open
+- **WHEN** the wordmark backdrop is chosen
+- **THEN** the cat is drawn in the mascot colour in front of the wordmark sample in the wordmark colour
+- **AND** the lab offers no rim and no other colouring of the cat or the wordmark
 
 #### Scenario: Theme colours are followed
 - **GIVEN** a theme colour value is changed in the site's theme
 - **WHEN** the cat lab is reloaded
-- **THEN** the backdrop, the wordmark sample and the accent treatment use the new value
+- **THEN** the backdrop, the wordmark sample and the cat use the new value
+
+#### Scenario: Backdrop on a narrow phone
+- **GIVEN** a 360 pixel wide viewport
+- **WHEN** the wordmark backdrop is chosen with the keyboard
+- **THEN** the wordmark sample fits inside the stage behind the cat without horizontal scrolling
 
 ### Requirement: Eye and ear detail controls
 The cat lab SHALL let the viewer choose the colour of the eyes (the page background colour, the accent colour or any custom colour), switch the pupils on and off, and choose the ear detail (none, the accent colour or the page background colour). These choices SHALL be part of the copied values and of the reset.

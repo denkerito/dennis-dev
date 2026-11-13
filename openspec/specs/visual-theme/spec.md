@@ -16,14 +16,16 @@ The site SHALL present one theme to every visitor. It SHALL NOT switch colours b
 - **AND** browser-drawn elements such as scrollbars match the light theme
 
 ### Requirement: Colour roles
-The theme SHALL be built from exactly three colour roles: a background colour covering most of the page, a second colour used for text, the wordmark and filled surfaces, and an accent colour used sparingly for emphasis.
+The theme SHALL be built from exactly five colour roles: a background colour covering most of the page; a second colour used for text and filled surfaces; a wordmark colour, a lighter tint of the second colour, used only by the wordmark; an accent colour used sparingly for emphasis; and a mascot colour used only by the mascot.
 
 #### Scenario: Roles on the home page
 - **GIVEN** the home page is loaded
 - **WHEN** the visitor looks at the hero and the sections
 - **THEN** the page background uses the background colour
-- **AND** the wordmark, headings and body text use the second colour
-- **AND** no colour outside the three roles appears
+- **AND** headings and body text use the second colour
+- **AND** the wordmark uses the wordmark colour
+- **AND** the mascot's silhouette uses the mascot colour, and its eyes, whiskers and inner ears use the background colour
+- **AND** no colour outside the five roles appears
 
 ### Requirement: Text contrast
 Text SHALL have a contrast ratio of at least 4.5:1 against its background, or at least 3:1 when it is large text (24 CSS pixels or more, or 18.66 CSS pixels or more when bold).
@@ -72,3 +74,21 @@ The theme SHALL define a display typeface used for the wordmark and a text typef
 - **GIVEN** a slow connection on which the display typeface has not arrived yet
 - **WHEN** the home page is first painted
 - **THEN** the wordmark is visible in a fallback typeface rather than hidden
+
+### Requirement: Mascot stands out
+The mascot colour SHALL have a contrast ratio of at least 3:1 against the background colour and against the wordmark colour, so that the mascot remains visible wherever it is allowed to be.
+
+#### Scenario: Mascot in front of the wordmark
+- **GIVEN** the mascot is in front of a letter of the wordmark
+- **WHEN** the mascot colour is compared with the wordmark colour
+- **THEN** the contrast ratio is at least 3:1
+
+#### Scenario: Mascot on the page background
+- **GIVEN** the mascot is in front of the page background
+- **WHEN** the mascot colour is compared with the background colour
+- **THEN** the contrast ratio is at least 3:1
+
+#### Scenario: Mascot on a narrow phone
+- **GIVEN** a 360 pixel wide viewport
+- **WHEN** the mascot is shown in front of the wordmark
+- **THEN** it uses the same colours, and so has the same contrast, as on desktop
