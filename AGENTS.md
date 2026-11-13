@@ -36,16 +36,39 @@ The signature element of the site. It comes from a screen recording Dennis saw o
 
 ### Behaviour
 
-- **Decided:** the cat roams freely and follows the pointer in two places only: the hero and the footer.
-- **Decided:** in the sections between them it is staged, in a different still pose per section, always resting on the edge of something (a card, a heading, a grid). In the reference: lying over an edge with paws and tail hanging, sitting beside a card and looking at it, seen from behind with a curled tail, ears peeking over the top of a grid.
-- **Decided:** exactly how the cat interacts with the wordmark is deferred. Do not design it as part of other work.
-- **Open:** what a click does, and how the cat behaves on touch devices. A working assumption for touch is that it walks to where the visitor taps.
+In the reference, the cat is small and seen from above in the hero and footer. In the sections it stays fixed on screen, much larger, and turns as the page scrolls, resting on the edge of things: lying over an edge with paws and tail hanging, sitting beside a card and looking at it, seen from behind with a curled tail, ears peeking over the top of a grid. This was seen, and Dennis deliberately chose a different model: one cat that always walks to a target, at a constant size and viewing angle.
+
+- **Decided:** there is one cat. Two are never visible at once.
+- **Decided:** the cat always walks toward a target, at a constant size and seen from a constant angle.
+- **Decided:** in the hero and the footer the target is the pointer. The cat stops about one body length away from it and looks at it.
+- **Decided:** in the sections between them the target is a spot beside the section (to its side or above it, depending on the layout). There the cat sits and looks at the section's content, and turns its head toward the card or link that is hovered or has keyboard focus. It does not follow the pointer there.
+- **Open:** where exactly the cat sits in each section. This needs real content.
+- **Decided:** character: calm and curious. The head turns first, and the cat gets up a moment later. Small pointer movements move only the head. It sits soon after arriving. It never ignores the visitor.
+- **Decided:** actions: walking at a single gait, turning on the spot, sitting, blinking, a tail flick. No running.
+- **Decided:** before the pointer has moved, or when there is none, the cat waits seated.
+- **Decided:** on touch devices the cat sits in the hero and the footer, because there is no pointer to follow, but it still walks from section to section as the visitor scrolls.
+- **Decided:** on a long jump (a navigation link, a direct link to a section, a reload part-way down) the cat leaves through the nearest edge and comes back in beside its new target. It never visibly teleports.
+- **Decided:** scrolling back makes it walk back the way it came.
+- **Decided:** it may pass in front of text only over the wordmark in the hero. It never goes over the header navigation.
+- **Decided:** it never disappears. In the reference it dissolves into the ink at times; here it does not.
+- **Decided:** exactly how the cat interacts with the wordmark is deferred. Do not design it as part of other work. The two items above already constrain it.
+- **Provisional (proposed, not confirmed by Dennis):** idle gestures (blink, tail flick) stop a while after the last interaction, so that nothing moves on its own for more than five seconds (WCAG 2.2.2).
+- **Provisional (proposed, not confirmed by Dennis):** the cat's interest does not fade: it follows every time.
+- **Provisional:** in the hero the cat waits in front of the end of the wordmark, at about 78% of the hero's width and 72% of its height.
+- **Provisional:** when the pointer leaves the hero the cat stops where it is and sits down. It does not go back to its waiting spot.
+- **Provisional:** it walks at about one of its own body lengths a second, which crosses the hero in about five seconds. It is on its feet half a second after the pointer moves away, and sits again within a second of arriving. Dennis looked at this walk in the lab and accepted it on 2026-11-13.
+- **Provisional:** its size follows the wordmark: 0.45 of the wordmark's font size, between 80 and 220 CSS pixels.
+- **Open:** what a click does.
 
 ### Look
 
 - **Decided:** it should look like the cat in the reference: seen in perspective, with the view changing as it turns (from above, in profile, facing the viewer), a ragged fur outline, light eyes and whiskers. Not a flat geometric silhouette.
 - **Decided:** it is a very dark, near-black cat.
-- **Provisional (an inference, not verified):** the reference cat appears to be a rigged 3D model rendered in flat black. The suggested way to get the same look cheaply is to use a 3D cat model as a production tool and pre-render it into image sequences for walking and into stills for the staged poses, so the same cat appears everywhere and no 3D library ships to visitors. This depends on finding a suitable model with a licence that allows the use, which has not been done.
+- **Decided:** it must be cute, with kitten proportions: a large head and large ears, short legs and a thick tail.
+- **Decided:** buying a model is ruled out. A model, if one is ever used, must be free. No suitable free one was found.
+- **Decided:** the cat is drawn entirely in code: a posable skeleton seen from a fixed oblique angle, drawn as a flat silhouette with fur tufts, eyes and whiskers. No model, image asset or library is involved. Dennis accepted this look on the lab page on 2026-11-12 (change `cat-look-test`), with the proportions, amount of fur and 50 degree viewing angle that are its defaults.
+- **Decided:** the eyes are light, each with a vertical pupil in the cat's own colour, and the inside of the ears is light too, shown only where an ear faces the viewer. "Light" is the page background colour. Dennis chose this in the lab on 2026-11-12, over accent or custom-coloured eyes and accent inner ears.
+- The fallbacks that were considered, should this look ever have to be replaced: for the shape or the walk, a model generated by an AI service from a text description, never from frames of the reference, with its licence checked first; for the fur, a model built by script in Blender with real fur and pre-rendered into images.
 
 ### Ink effect
 
@@ -53,9 +76,9 @@ The signature element of the site. It comes from a screen recording Dennis saw o
 - **Open:** how strong the effect is here, and whether it persists or heals. Dennis first described it as "slightly distorts the wordmark", then showed the reference where it is destroyed. Build any prototype with these as adjustable parameters so he can choose by looking.
 - **Provisional:** a liquid look like the reference most likely needs WebGL, which can be written without a library.
 
-### Known problem to resolve
+### How the cat stays visible on the wordmark
 
-- **Open:** the wordmark is currently navy and the cat near-black. Those two colours have almost no contrast, so the cat nearly disappears exactly where it matters most. Options discussed: a light outline around the cat (which could read as a fur rim), a cat in the accent colour, or a wordmark in the accent colour. Dennis has not chosen.
+- **Decided:** a near-black cat almost disappeared on the navy wordmark (1.2:1). Asked how to tell them apart, Dennis answered: change the page's colours; the cat must not get a light rim or colours other than those already decided. So the cat keeps its colours and the wordmark gets a colour of its own, an ink blue that is a lighter tint of the navy, on which the cat stands out at 4.1:1. A light rim, a cat in the accent colour and a wordmark in the accent colour were considered and rejected.
 
 ### Rules that hold whatever the cat becomes
 
@@ -72,10 +95,13 @@ The signature element of the site. It comes from a screen recording Dennis saw o
   | Role | Share | Value | Used for |
   |---|---|---|---|
   | Background | 60% | cream `#F4EDE0` | page background |
-  | Second colour | 30% | navy `#14213D` | text, the giant wordmark, filled cards |
+  | Second colour | 30% | navy `#14213D` | text, filled cards |
+  | Wordmark colour | part of the 30% | ink blue `#3F6FD0` | the giant wordmark only |
   | Accent | 10% | dark coral `#E24A38` | small details only |
+  | Mascot colour | the cat | near-black `#0B0B10` | the cat's silhouette and pupils only |
 
-- **Provisional:** the giant wordmark uses the second colour, so that the accent really stays near 10%.
+- **Provisional:** the giant wordmark uses the wordmark colour, a lighter tint of the second colour with the same hue, so that the accent really stays near 10%. The header's `D` home mark stays in the second colour: it is a link, and the wordmark colour does not reach the contrast normal-size text needs (4.1:1 on cream).
+- The cat's eyes, whiskers and inner ears use the background colour.
 - The accent does not reach the contrast needed for normal-size text on either other colour (3.4:1 on cream, 4.0:1 on navy). Use it for decoration and large elements, not for body-size text.
 - **Provisional:** the wordmark is set in a very heavy, condensed sans-serif in capitals; Anton is the stand-in. The reference adds rough, stamp-like edges on top of the letters; whether to do that here is **Open**.
 - Mood taken from the reference, all **Provisional**: ink on paper, oversized type that runs off the edges of the screen behind the content, solid dark cards sitting on the light background.
@@ -117,17 +143,18 @@ Dennis's email address and date of birth are needed for the Contact and About se
 - **Decided:** Next.js, and CSS Modules for styling.
 - **Provisional:** the site is exported as fully static files. This rules out server-side code at request time, which the visitor-distance feature will have to work around or revisit.
 - **Open:** hosting and domain. Do not rely on any provider's features.
+- **Provisional:** lab pages exist for tuning prototypes by eye. They are available only in development and are never published.
 
 ## Intended order of work
 
 **Provisional.** The cat comes early on purpose: it is the only uncertain part, and it sets the style for everything else.
 
 1. Site shell: the empty, correct page.
-2. Cat look test: obtain a model and check that it can look like the reference.
+2. Cat look test: a cat drawn in code, judged against the reference on a lab page.
 3. Cat following the pointer in the hero.
 4. Ink effect on the wordmark.
 5. Real content for About, Work and Contact.
-6. Staged cat poses in the sections.
+6. Cat walking between sections and sitting beside them.
 7. Cat in the footer, then polish.
 
 For what is actually planned or done, look at `openspec/changes/` and `openspec/specs/`, not at this list.

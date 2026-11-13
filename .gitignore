@@ -4,6 +4,9 @@ dist/
 .DS_Store
 Thumbs.db
 
+# Reference material from other sites: never committed
+reference/
+
 # Next.js
 .next/
 out/
