@@ -1,0 +1,20 @@
+.slot {
+  pointer-events: none;
+  /* Sizes are set by the owning section from the --slot-* tokens. */
+  flex: none;
+}
+
+/* Each slot belongs to one layout; the switch is the same 60rem breakpoint the sections use. */
+.wide {
+  display: none;
+}
+
+@media (min-width: 60rem) {
+  .wide {
+    display: block;
+  }
+
+  .narrow {
+    display: none;
+  }
+}

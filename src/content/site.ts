@@ -16,10 +16,12 @@ export type NavigationItem = {
   /** Fragment identifier of the section, without the leading `#`. */
   readonly id: string;
   readonly label: string;
+  /** Shown as a filled button in the header, to invite the click. */
+  readonly highlight?: boolean;
 };
 
 export const navigation: readonly NavigationItem[] = [
   { id: "about", label: "About" },
   { id: "work", label: "Work" },
-  { id: "contact", label: "Contact" },
+  { id: "contact", label: "Contact", highlight: true },
 ];

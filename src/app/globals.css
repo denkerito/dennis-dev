@@ -16,6 +16,23 @@
   --header-height: 3.5rem;
   --gutter: clamp(1rem, 4vw, 3rem);
 
+  /* The hero wordmark's font size: driven by the viewport width, capped by its height. */
+  --wordmark-size: clamp(3rem, 31vw, 62svh);
+  /*
+   * The cat's normal size: 0.45 of the wordmark, between 80 and 220px.
+   * HeroMascot.tsx computes the same formula in JavaScript; keep the two in step.
+   */
+  --mascot-size: clamp(80px, calc(var(--wordmark-size) * 0.45), 220px);
+
+  /* Room reserved for the cat beside each block (section-layout spec). */
+  --slot-w: calc(var(--mascot-size) * 2.3);
+  --slot-h: calc(var(--mascot-size) * 2);
+  /* Beside a Work card the slot takes the card's height, but never less than this. */
+  --slot-card-min-h: calc(var(--mascot-size) * 1.2);
+  /* About's slot on wide screens: room for the cat at about 2.5 times its size. */
+  --slot-close-w: calc(var(--mascot-size) * 3);
+  --slot-close-h: calc(var(--mascot-size) * 3.4);
+
   /* One theme only: never let the browser apply its own dark styling. */
   color-scheme: only light;
 }
@@ -61,10 +78,34 @@ a {
   color: inherit;
 }
 
-/* One focus indicator for the whole site: 2px ink outline, 13.72:1 on paper. */
+/*
+ * One focus indicator for the whole site: 2px ink outline, 13.72:1 on paper.
+ * Dark surfaces set --focus-color to the paper colour.
+ */
 :focus-visible {
-  outline: 2px solid var(--color-ink);
+  outline: 2px solid var(--focus-color, var(--color-ink));
   outline-offset: 3px;
+}
+
+/* Read by assistive technology, not shown. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/*
+ * Content that only makes sense without scripting is hidden here; the layout's
+ * <noscript> style shows it and hides its [data-js] counterpart instead.
+ */
+[data-nojs] {
+  display: none;
 }
 
 /* Skip-link and fragment targets are not controls: no outline when they take focus. */

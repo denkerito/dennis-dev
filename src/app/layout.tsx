@@ -75,6 +75,14 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={displayFont.variable}>
+      <head>
+        {/* Without scripting: hide controls that need it, show their plain counterparts. */}
+        <noscript
+          dangerouslySetInnerHTML={{
+            __html: "<style>[data-js]{display:none!important}[data-nojs]{display:revert!important}</style>",
+          }}
+        />
+      </head>
       <body>
         <SkipLink targetId="main" />
         <SiteHeader />

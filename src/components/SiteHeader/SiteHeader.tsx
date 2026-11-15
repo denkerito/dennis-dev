@@ -13,7 +13,10 @@ export function SiteHeader() {
         <ul className={styles.list}>
           {navigation.map((item) => (
             <li key={item.id}>
-              <a className={styles.link} href={`#${item.id}`}>
+              <a
+                className={item.highlight ? `${styles.link} ${styles.button}` : styles.link}
+                href={`#${item.id}`}
+              >
                 {item.label}
               </a>
             </li>

@@ -11,8 +11,7 @@
 .wordmark {
   font-family: var(--font-display), sans-serif;
   font-weight: 400;
-  /* Driven by the viewport width, capped by its height. */
-  font-size: clamp(3rem, 31vw, 62svh);
+  font-size: var(--wordmark-size);
   line-height: 0.9;
   color: var(--color-wordmark);
   white-space: nowrap;
