@@ -1,19 +1,20 @@
 import type { ReactNode } from "react";
 
-import styles from "./Section.module.css";
+import styles from "@/components/Sections/Sections.module.css";
 
 type SectionProps = {
   /** Fragment identifier used by the navigation. */
   id: string;
-  title: string;
-  children?: ReactNode;
+  /** Layout of the section's content, from Sections.module.css. */
+  className?: string;
+  children: ReactNode;
 };
 
-export function Section({ id, title, children }: SectionProps) {
+/** A page section: the anchor, the side padding and the maximum content width. */
+export function Section({ id, className, children }: SectionProps) {
   return (
-    <section id={id} className={styles.section}>
-      <h2 className={styles.title}>{title}</h2>
-      {children}
+    <section id={id} className={[styles.section, styles[id]].filter(Boolean).join(" ")}>
+      <div className={[styles.inner, className].filter(Boolean).join(" ")}>{children}</div>
     </section>
   );
 }

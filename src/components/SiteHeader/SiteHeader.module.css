@@ -24,8 +24,8 @@
 }
 
 .nav {
-  /* Pull the last link's padding back to the gutter line. */
-  margin-inline-end: -0.5rem;
+  /* The last item is the filled Contact button, whose edge sits on the gutter line. */
+  margin-inline-end: 0;
 }
 
 .list {
@@ -53,4 +53,24 @@
 .link:focus-visible {
   text-decoration-line: underline;
   text-decoration-color: var(--color-accent);
+}
+
+/*
+ * Contact, filled with the accent to invite the click. Its text is large (19px
+ * bold, at least 18.66px), so ink on the accent needs 3:1 and has 4.0:1; the
+ * accent against the paper header is 3.4:1, above the 3:1 for a control's edge.
+ */
+.button {
+  min-height: 2.5rem;
+  margin-inline-start: 0.25rem;
+  padding-inline: 0.75rem;
+  border-radius: 0.25rem;
+  background-color: var(--color-accent);
+  font-size: 1.1875rem;
+  font-weight: 700;
+}
+
+.button:hover,
+.button:focus-visible {
+  text-decoration-color: var(--color-ink);
 }

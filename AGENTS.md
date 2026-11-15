@@ -28,21 +28,26 @@ Very little here is final. Every item carries one of three labels, and they must
 - **Decided:** header with a capital `D` home mark on the left (returns to the top) and About · Work · Contact on the right.
 - **Decided:** a hero that is essentially just the giant `DENNIS` wordmark, as real text.
 - **Decided:** sections for About, Work and Contact, then a footer.
-- **Open:** Dennis's first idea placed a contact call-to-action directly under the name, before About. The current shell orders the sections About, Work, Contact to match the menu. Whether a contact prompt also appears right under the hero is undecided.
+- **Decided (2026-11-13):** there is no contact prompt under the hero. Instead the header's Contact link is a highlighted button, filled with the accent colour, to invite the click.
+- **Decided:** on wide screens the sections are a sequence of blocks (About, each Work card, Contact), each with its content on one side and room for the cat on the other, alternating sides down the page, starting with the cat on the right of About. On narrow screens the blocks stack and each section keeps room for the cat in its heading row, on the right.
 
 ## The cat
 
-The signature element of the site. It comes from a screen recording Dennis saw of a tattoo-studio website; there is no link to that site, only the recording. **Take the mechanism and the mood from it, never its artwork, illustrations or copy.** The cat on this site must be Dennis's own.
+The signature element of the site. It comes from a screen recording Dennis saw of a tattoo-studio website; there is no link to that site, only the recording. The recording is in the `reference/` folder at the root of the repository; that folder is git-ignored, so it exists only on Dennis's machine. **Take the mechanism and the mood from it, never its artwork, illustrations or copy.** The cat on this site must be Dennis's own.
 
 ### Behaviour
 
 In the reference, the cat is small and seen from above in the hero and footer. In the sections it stays fixed on screen, much larger, and turns as the page scrolls, resting on the edge of things: lying over an edge with paws and tail hanging, sitting beside a card and looking at it, seen from behind with a curled tail, ears peeking over the top of a grid. This was seen, and Dennis deliberately chose a different model: one cat that always walks to a target, at a constant size and viewing angle.
 
 - **Decided:** there is one cat. Two are never visible at once.
-- **Decided:** the cat always walks toward a target, at a constant size and seen from a constant angle.
+- **Decided:** the cat always walks toward a target, at a constant size and seen from a constant angle, with one exception: in About it comes close to the viewer and is much larger, as in the reference. Elsewhere it keeps its size, walks, sits and stays seated.
+- **Provisional:** in About it is about 2.5 times its normal size. There is no close-up on mobile.
 - **Decided:** in the hero and the footer the target is the pointer. The cat stops about one body length away from it and looks at it.
 - **Decided:** in the sections between them the target is a spot beside the section (to its side or above it, depending on the layout). There the cat sits and looks at the section's content, and turns its head toward the card or link that is hovered or has keyboard focus. It does not follow the pointer there.
-- **Open:** where exactly the cat sits in each section. This needs real content.
+- **Decided:** where the cat sits in the sections: beside each block on wide screens (About, each Work card, Contact), alternating right and left; on mobile, in the heading row of each section. The page reserves this room as empty, decorative slots (`[data-mascot-slot]`, change `sections-layout-and-content`).
+- **Provisional:** on mobile there is one slot per section, none per card.
+- **Decided:** between sections, the cat's position follows the scroll position. The scroll sets where it should be, and it walks there at its own pace, catching up rather than running. It does not move in exact step with a fast scroll.
+- **Decided:** it may pass behind a card, which hides it completely, but never behind plain text. The layout guarantees that between two slots there is always a way behind a card or across empty background.
 - **Decided:** character: calm and curious. The head turns first, and the cat gets up a moment later. Small pointer movements move only the head. It sits soon after arriving. It never ignores the visitor.
 - **Decided:** actions: walking at a single gait, turning on the spot, sitting, blinking, a tail flick. No running.
 - **Decided:** before the pointer has moved, or when there is none, the cat waits seated.
@@ -50,7 +55,7 @@ In the reference, the cat is small and seen from above in the hero and footer. I
 - **Decided:** on a long jump (a navigation link, a direct link to a section, a reload part-way down) the cat leaves through the nearest edge and comes back in beside its new target. It never visibly teleports.
 - **Decided:** scrolling back makes it walk back the way it came.
 - **Decided:** it may pass in front of text only over the wordmark in the hero. It never goes over the header navigation.
-- **Decided:** it never disappears. In the reference it dissolves into the ink at times; here it does not.
+- **Decided:** it never dissolves. In the reference it dissolves into the ink at times; here it does not. It may be briefly hidden behind a card it is crossing.
 - **Decided:** exactly how the cat interacts with the wordmark is deferred. Do not design it as part of other work. The two items above already constrain it.
 - **Provisional (proposed, not confirmed by Dennis):** idle gestures (blink, tail flick) stop a while after the last interaction, so that nothing moves on its own for more than five seconds (WCAG 2.2.2).
 - **Provisional (proposed, not confirmed by Dennis):** the cat's interest does not fade: it follows every time.
@@ -109,32 +114,34 @@ In the reference, the cat is small and seen from above in the hero and footer. I
 
 ## Content
 
-An outline of what each section is meant to hold. Wording is not written yet, and none of this is built.
+What each section holds. The wording is written and lives in `src/content/sections.ts` (change `sections-layout-and-content`); edit it there.
 
 **Contact — Decided**
 - LinkedIn (`linkedin.com/in/dennis-ismajli`), GitHub (`github.com/denkerito`) and email. No phone number.
-- The tone of the invitation is casual, along the lines of offering a coffee.
+- The tone of the invitation is casual, along the lines of offering a coffee: "Let's grab a coffee.", then the links.
+- The email address is shown in full as a `mailto:` link, with a button that copies it.
 
 **About — Provisional**
-- His age shown as a live number with decimals that keeps counting.
+- A greeting, "Hi, I'm Dennis.", then a bulleted list: age, degree, where he is based, interests, languages, what he does off the keyboard.
+- **Decided:** his age is a live number with eight decimals that keeps counting and is always correct; it ticks over at midnight, Milan time, on his birthday. Clicking the number pauses and resumes it (WCAG 2.2.2). It starts paused for visitors who ask for reduced motion.
 - Based in Milan, "or maybe somewhere else around Europe".
-- An approximate distance between the visitor and Milan, derived from the visitor's IP. Nothing is stored, and it falls back to a plain "Based in Milan" when it cannot be worked out.
+- An approximate distance between the visitor and Milan, derived from the visitor's IP. Nothing is stored, and it falls back to a plain "Based in Milan" when it cannot be worked out. Not built yet.
 - BSc in Computer Science at the University of Milano-Bicocca, third year.
+- Interests: AI, LLMs and machine learning, maths and software engineering.
 - Languages: English, Italian, Albanian.
-- Outside work: lifting and running.
-- A clearly visible line that he is open to internships.
+- Off the keyboard: lifting and running.
+- A clearly visible line that he is open to internships: "in Milan, remote, or relocating anywhere in Europe".
 
-**Work — Provisional**
-- **Agentic RAG** (`github.com/denkerito/agentic-rag`): built as a cold application instead of sending a CV. It got a polite rejection, and he kept developing it anyway. The rejection is part of the story, not something to hide. Do not name the company.
-- **JIM007** (`github.com/denkerito/Jim-007`): a workout tracker. Gym apps force rigid forms mid-workout; here he logs a session by writing it in plain language.
-- **Hackathon win, May 2026:** his team won a hackathon on accessibility in banking with a solution built on a RAG architecture. Told as a short story. **Never name the bank.**
-- Each project follows the same shape: what it is, why he built it, link.
+**Work — Decided order:** the hackathon, then Agentic RAG, then JIM007.
+- **Hackathon win, May 2026:** his team won a hackathon on digital accessibility in banking. The problem was the bank's employees losing time to bureaucracy and jargon-heavy documents; the answer was a chatbot on a RAG architecture they can ask. They won because they understood the problem, and what accessibility means, before thinking about a solution. It was a prototype; the copy does not say "built". No stack and no link. **Never name the bank.**
+- **Agentic RAG** (`github.com/denkerito/agentic-rag`): an AI agent that investigates a company's finances. He built it to show up with something that works instead of a plain "hire me" cold message on LinkedIn. It got a polite rejection, and he kept building it anyway. The rejection is part of the story, not something to hide; keep the tone plain, not self-promotional. Do not name the company.
+- **JIM007** (`github.com/denkerito/Jim-007`): a workout tracker. Gym apps force rigid forms mid-workout; here he logs a session by writing it in a chat.
+- Each card follows the same shape: what it is, why it exists, and, when there is one, its stack and a link.
 
 **Open content questions**
-- When he is available for an internship, and where (Milan, remote, abroad).
-- For the hackathon: who had the problem, and what they can do now.
+- When he is available for an internship. The "internships" line is Provisional.
 
-Dennis's email address and date of birth are needed for the Contact and About sections but are deliberately not written in this file. Ask him when a change needs them.
+Dennis's email address and date of birth are deliberately not written in this file. They are in `src/content/sections.ts`, which is public.
 
 ## Technical direction
 

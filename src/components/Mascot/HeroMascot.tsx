@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 
 // The cat's size relative to the wordmark's font size, and its limits in CSS pixels.
+// globals.css writes the same formula as --mascot-size, which sizes the section slots; keep the two in step.
 const SIZE_RATIO = 0.45;
 const MIN_SIZE = 80;
 const MAX_SIZE = 220;

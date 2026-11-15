@@ -1,0 +1,31 @@
+.wrap {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+}
+
+.button {
+  /* Wide enough for "Copied", so the row does not move when it changes. */
+  min-width: 5.5rem;
+  min-height: 2.5rem;
+  padding: 0 0.875rem;
+  border: 2px solid var(--color-ink);
+  border-radius: 0.25rem;
+  background: none;
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.button:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 2px;
+}
+
+.failed {
+  font-size: 1rem;
+}

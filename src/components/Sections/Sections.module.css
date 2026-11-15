@@ -1,0 +1,311 @@
+/*
+ * Layout of About, Work and Contact (section-layout spec).
+ *
+ * Narrow (below 60rem): blocks stack; each section has one slot in its heading row.
+ * Wide (60rem and up): blocks alternate sides — About's slot on the right, then
+ * left, right, left beside the three cards, then right beside Contact. Sides are
+ * set with grid placement only, so the DOM order stays the visual order.
+ */
+
+.section {
+  padding: 3rem var(--gutter);
+}
+
+.inner {
+  max-width: 90rem;
+  margin-inline: auto;
+}
+
+.title {
+  font-size: clamp(1.75rem, 1.25rem + 2vw, 3rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+/* ---- Split blocks: About and Contact ------------------------------------ */
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--slot-w);
+  grid-template-areas:
+    "title slot"
+    "body body";
+  column-gap: 1rem;
+  row-gap: 1.5rem;
+}
+
+.split > .title {
+  grid-area: title;
+  align-self: end;
+}
+
+.split > .slot {
+  grid-area: slot;
+  width: var(--slot-w);
+  height: var(--slot-h);
+}
+
+.body {
+  grid-area: body;
+  min-width: 0;
+}
+
+@media (min-width: 60rem) {
+  .split {
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "title slot"
+      "body slot";
+    column-gap: 3rem;
+  }
+
+  .split > .title {
+    align-self: start;
+  }
+
+  /* About: room for the cat close to the viewer, with the heading and card centred beside it. */
+  .close {
+    grid-template-columns: minmax(0, 1fr) var(--slot-close-w);
+    grid-template-rows: auto;
+    grid-template-areas: "main slot";
+  }
+
+  .close > .group {
+    display: block;
+    grid-area: main;
+    align-self: center;
+  }
+
+  .group > .title {
+    margin-bottom: 1.5rem;
+  }
+
+  .close > .slot {
+    width: var(--slot-close-w);
+    height: var(--slot-close-h);
+  }
+}
+
+/* ---- About -------------------------------------------------------------- */
+
+/* Narrow screens: the heading and the card are laid out as if the group were not there. */
+.group {
+  display: contents;
+}
+
+.group > .title {
+  grid-area: title;
+  align-self: end;
+}
+
+.aboutCard {
+  display: block;
+}
+
+.greeting {
+  font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.facts {
+  display: grid;
+  gap: 0.5rem;
+  margin: 1.25rem 0 0;
+  padding-inline-start: 1.25rem;
+  font-size: 1.125rem;
+}
+
+.facts li::marker {
+  color: var(--color-accent);
+}
+
+/* Stands out by size and weight; the accent bar is decoration only. */
+.internship {
+  margin-top: 2rem;
+  padding-inline-start: 1rem;
+  border-inline-start: 4px solid var(--color-accent);
+  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* ---- Work --------------------------------------------------------------- */
+
+.workHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--slot-w);
+  align-items: end;
+  column-gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.workHead > .slot {
+  width: var(--slot-w);
+  height: var(--slot-h);
+}
+
+.rows {
+  display: grid;
+  gap: 2rem;
+}
+
+.row {
+  display: block;
+}
+
+@media (min-width: 60rem) {
+  .workHead {
+    display: block;
+    margin-bottom: 2rem;
+  }
+
+  /* The band above Contact is Contact's own top padding; Work adds none below. */
+  .work {
+    padding-bottom: 0;
+  }
+
+  .rows {
+    gap: 3rem;
+  }
+
+  /* Odd rows: slot left, card right. Even rows: card left, slot right. */
+  .row {
+    display: grid;
+    grid-template-columns: var(--slot-w) minmax(0, 1fr);
+    align-items: start;
+    column-gap: 3rem;
+  }
+
+  /*
+   * Beside a card the slot is as tall as the card, so each row is exactly the
+   * card's height and the gaps between cards are equal. It never goes below
+   * the height a seated cat needs.
+   */
+  .row > .slot {
+    grid-row: 1;
+    grid-column: 1;
+    align-self: stretch;
+    width: var(--slot-w);
+    min-height: var(--slot-card-min-h);
+  }
+
+  .row > .card {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .row:nth-child(even) {
+    grid-template-columns: minmax(0, 1fr) var(--slot-w);
+  }
+
+  .row:nth-child(even) > .slot {
+    grid-column: 2;
+  }
+
+  .row:nth-child(even) > .card {
+    grid-column: 1;
+  }
+}
+
+/* Solid and above the page, so a cat drawn behind it is completely hidden. */
+.card {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  border-radius: 0.375rem;
+  background-color: var(--color-ink);
+  color: var(--color-paper);
+  /* Paper focus ring on the ink card: 13.72:1. */
+  --focus-color: var(--color-paper);
+  /* For small elements that must stand out from the card, such as the age counter's cue. */
+  --surface: var(--color-ink);
+  --on-surface: var(--color-paper);
+}
+
+.cardTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.cardText {
+  font-size: 1.0625rem;
+}
+
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.stack li + li::before {
+  content: "·";
+  /* Decorative separator: give it empty alternative text where supported. */
+  content: "·" / "";
+  margin-inline-end: 0.5rem;
+}
+
+.cardLink {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.5rem;
+  font-weight: 600;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.25em;
+}
+
+.cardLink:hover {
+  text-decoration-color: var(--color-accent);
+}
+
+/* ---- Contact ------------------------------------------------------------ */
+
+/* An empty band above Contact, as tall as the cat, to cross the page. */
+.contact {
+  padding-top: max(3rem, var(--mascot-size));
+}
+
+.invitation {
+  font-size: clamp(1.75rem, 1.2rem + 2.4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.ways {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 1.125rem;
+}
+
+.ways a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.5rem;
+  font-weight: 600;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+
+.ways a:hover {
+  text-decoration-color: var(--color-accent);
+}
+
+.emailRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+}

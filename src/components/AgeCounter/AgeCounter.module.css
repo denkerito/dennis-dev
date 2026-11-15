@@ -1,0 +1,51 @@
+/* The cue is placed against the whole line, after "years old", where the row is empty. */
+.line {
+  position: relative;
+}
+
+.counter {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  /* A dotted underline hints that the number does something. */
+  text-decoration: underline dotted;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.25em;
+}
+
+/*
+ * Every digit the same width and always eight decimals, so the number keeps one
+ * width: nothing moves as it counts.
+ */
+.digits {
+  font-variant-numeric: tabular-nums;
+}
+
+/* "Pause" or "Play", shown after the line on hover and focus. */
+.cue {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 0.75rem);
+  transform: translateY(-50%);
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+  /* Inverted against whatever it sits on: ink on paper, paper on a dark card. */
+  background-color: var(--on-surface, var(--color-ink));
+  color: var(--surface, var(--color-paper));
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.counter:hover .cue,
+.counter:focus-visible .cue {
+  opacity: 1;
+}
